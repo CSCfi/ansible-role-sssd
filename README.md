@@ -1,7 +1,7 @@
 ansible-role-sssd
 =========
 
-Configures sssd
+Configures sssd. Quite untested in it's current state.
 
 Requirements
 ------------
@@ -15,6 +15,7 @@ Role Variables
 See:
  - defaults/main.yml and vars/main.yml
  - templates/sssd-example.conf.j2
+ - ldap\_password - this variable needs to have the password of the bind-account.
 
 Dependencies
 ------------
