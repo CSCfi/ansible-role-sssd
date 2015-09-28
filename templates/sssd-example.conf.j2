@@ -1,0 +1,47 @@
+[domain/LDAP]
+
+ldap_id_use_start_tls = True
+cache_credentials = true
+ldap_search_base = {{ ldap_search_base }}
+
+ldap_user_search_base = {{ ldap_user_search_base }}
+
+ldap_group_search_base = {{ ldap_group_search_base }}
+
+ldap_default_bind_dn = {{ ldap_default_bind_dn }}
+ldap_default_authtok = {{ ldap_password }}
+ldap_schema = rfc2307
+id_provider = ldap
+auth_provider = ldap
+chpass_provider = ldap
+ldap_uri = {{ ldap_uri }}
+ldap_backup_uri = {{ ldap_backup_uri }}
+ldap_tls_cacertdir = /etc/openldap/certs
+debug_level = 2
+enumerate = true
+sudo_provider = ldap
+ldap_sudo_search_base = {{ ldap_sudo_search_base }}
+ldap_sudo_hostnames = {{ inventory_hostname }}
+ipa_hostname = {{ inventory_hostname }}
+access_provider = permit
+#access_provider = ldap
+#ldap_access_order = host
+ldap_user_ssh_public_key = sshPublicKey
+
+[sssd]
+services = nss, pam, sudo, ssh
+config_file_version = 2
+
+domains = LDAP
+[nss]
+filter_users = root,named,avahi,haldaemon,dbus,radiusd,news,nscd,slurm,munge
+[pam]
+
+[sudo]
+
+[autofs]
+
+[ssh]
+
+[pac]
+

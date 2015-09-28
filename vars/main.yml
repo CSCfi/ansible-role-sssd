@@ -1,0 +1,6 @@
+---
+ # ldap_sudo_hostnames and ipa_hostname must be set to what the field sudoHost contains in LDAP
+ terenapath: ""
+ uid_min: 500
+ ldap_sudo_hostnames: "{{ inventory_hostname }}"
+ ipa_hostname: "{{ inventory_hostname }}"
