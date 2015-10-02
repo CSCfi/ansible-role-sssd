@@ -2,7 +2,7 @@
 galaxy_info:
   author: Marco Passerini
   description: Installs sssd and dependencies. Copies in certificates. Configures sssd. Updates nswitch and pam.d/system-auth and pam.d/password-auth.
-  company: CSC
+  company: CSC - IT Center for Science Ltd.
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
   #issue_tracker_url: github.com
