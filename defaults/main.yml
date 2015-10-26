@@ -1,10 +1,10 @@
 ---
 # defaults file for ansible-role-sssd
-ldap_terena = False
-ldap_search_base = "dc=example,dc=com"
-ldap_user_search_base = "ou=Users,ou=org,dc=example,dc=com?subtree?(host=host.example.com)"
-ldap_group_search_base = "ou=Projects,ou=org,dc=example,dc=com"
-ldap_default_bind_dn = "uid=binduser,ou=org,dc=example,dc=com"
-ldap_uri = "ldaps://host1.example.com/, ldaps://host2.example.com/"
-ldap_backup_uri = "ldaps://host3.example.com"
-ldap_sudo_search_base = "OU=Group,OU=Group2,ou=org,dc=example,dc=com"
+ldap_terena: False
+ldap_search_base: "dc=example,dc=com"
+ldap_user_search_base: "ou=Users,ou=org,dc=example,dc=com?subtree?(host=host.example.com)"
+ldap_group_search_base: "ou=Projects,ou=org,dc=example,dc=com"
+ldap_default_bind_dn: "uid=binduser,ou=org,dc=example,dc=com"
+ldap_uri: "ldaps://host1.example.com/, ldaps://host2.example.com/"
+ldap_backup_uri: "ldaps://host3.example.com"
+ldap_sudo_search_base: "OU=Group,OU=Group2,ou=org,dc=example,dc=com"
