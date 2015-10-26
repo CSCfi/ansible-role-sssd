@@ -58,7 +58,7 @@
   when: terenapath is defined and terena_cert.stat.exists and terenahash.stdout is defined and ldap_terena
 
 - name: template sssd.conf
-  template: src=sssd.conf.j2 dest=/etc/sssd/sssd.conf owner=root group=root mode=0600 backup=yes
+  template: src=sssd-example.conf.j2 dest=/etc/sssd/sssd.conf owner=root group=root mode=0600 backup=yes
   notify: restart sssd
 
 - name: start sssd on boot
