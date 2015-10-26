@@ -34,25 +34,28 @@
 
 - name: copy the Terena certificate
   copy: src=TERENA-SSL-CA.crt dest=/etc/pki/tls/certs/TERENA-SSL-CA.crt owner=root group=root mode=0644 backup=yes
+  when: ldap_terena
 
 - name: calculate Terena hash
   command: openssl x509 -in /etc/pki/tls/certs/TERENA-SSL-CA.crt -noout -hash
   register: terenahash
   failed_when: (terenahash.rc != 0) and (terenahash.rc != 1)
   changed_when: terenahash.rc == 1
+  when: ldap_terena
 
 - name: calculate Terena path
   set_fact:
     terenapath: "/etc/openldap/certs/{{terenahash.stdout}}.0"
-  when: terenahash.stdout is defined
+  when: terenahash.stdout is defined and ldap_terena
 
 - name: check that terena cert exists
   stat: path=/etc/pki/tls/certs/TERENA-SSL-CA.crt
   register: terena_cert
+  when: ldap_terena
 
 - name: link the Terena certificate
   file: src=/etc/pki/tls/certs/TERENA-SSL-CA.crt dest={{ terenapath }} state=link
-  when: terenapath is defined and terena_cert.stat.exists and terenahash.stdout is defined
+  when: terenapath is defined and terena_cert.stat.exists and terenahash.stdout is defined and ldap_terena
 
 - name: template sssd.conf
   template: src=sssd.conf.j2 dest=/etc/sssd/sssd.conf owner=root group=root mode=0600 backup=yes
