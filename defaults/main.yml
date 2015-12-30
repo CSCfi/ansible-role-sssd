@@ -1,5 +1,7 @@
 ---
 # defaults file for ansible-role-sssd
+sssd_configure: False
+# sssd_configure is False by default - by default nothing is done by this role.
 ldap_terena: False
 ldap_search_base: "dc=example,dc=com"
 ldap_user_search_base: "ou=Users,ou=org,dc=example,dc=com?subtree?(host=host.example.com)"

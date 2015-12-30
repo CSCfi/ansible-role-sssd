@@ -1,0 +1,65 @@
+---
+- name: install software groups
+  yum: name="{{item}}" state=present
+  with_items:
+     - "sssd"
+     - "sssd-client"
+     - "sssd-proxy"
+     - "sssd-ipa"
+     - "authconfig"
+
+- name: template /etc/pam.d/system-auth - EL7
+  template: src=system-auth.centos7.j2 dest=/etc/pam.d/system-auth backup=yes
+  when: ansible_distribution_major_version == "7"
+
+- name: template /etc/pam.d/system-auth - EL6
+  template: src=system-auth.j2 dest=/etc/pam.d/system-auth backup=yes
+  when: ansible_distribution_major_version == "6"
+
+- name: template /etc/nsswitch.conf - EL6
+  template: src=nsswitch.conf.j2 dest=/etc/nsswitch.conf backup=yes
+  when: ansible_distribution_major_version == "6"
+
+- name: template /etc/nsswitch.conf - EL7
+  template: src=nsswitch.conf.centos7.j2 dest=/etc/nsswitch.conf backup=yes
+  when: ansible_distribution_major_version == "7"
+
+- name: template /etc/pam.d/password-auth - EL7
+  template: src=password-auth.centos7.j2 dest=/etc/pam.d/password-auth backup=yes
+  when: ansible_distribution_major_version == "7"
+
+- name: template /etc/pam.d/password-auth - EL6
+  template: src=password-auth.j2 dest=/etc/pam.d/password-auth backup=yes
+  when: ansible_distribution_major_version == "6"
+
+- name: copy the Terena certificate
+  copy: src=TERENA-SSL-CA.crt dest=/etc/pki/tls/certs/TERENA-SSL-CA.crt owner=root group=root mode=0644 backup=yes
+  when: ldap_terena
+
+- name: calculate Terena hash
+  command: openssl x509 -in /etc/pki/tls/certs/TERENA-SSL-CA.crt -noout -hash
+  register: terenahash
+  failed_when: (terenahash.rc != 0) and (terenahash.rc != 1)
+  changed_when: terenahash.rc == 1
+  when: ldap_terena
+
+- name: calculate Terena path
+  set_fact:
+    terenapath: "/etc/openldap/certs/{{terenahash.stdout}}.0"
+  when: terenahash.stdout is defined and ldap_terena
+
+- name: check that terena cert exists
+  stat: path=/etc/pki/tls/certs/TERENA-SSL-CA.crt
+  register: terena_cert
+  when: ldap_terena
+
+- name: link the Terena certificate
+  file: src=/etc/pki/tls/certs/TERENA-SSL-CA.crt dest={{ terenapath }} state=link
+  when: terenapath is defined and terena_cert.stat.exists and terenahash.stdout is defined and ldap_terena
+
+- name: template sssd.conf
+  template: src=sssd-example.conf.j2 dest=/etc/sssd/sssd.conf owner=root group=root mode=0600 backup=yes
+  notify: restart sssd
+
+- name: start sssd on boot
+  service: name=sssd state=started enabled=yes
