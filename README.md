@@ -1,16 +1,25 @@
 ansible-role-sssd
 =========
 
-Configures sssd. Quite untested in it's current state.
+Configures a Linux server to use sssd and LDAP for system authentication.
+
+Tested on EL6 and EL7
 
 Requirements
 ------------
 
- - Certificate needs to be from TERENA (so probably others or TERENA3 does not work)
-  - This should be a parameter
+ - Certificate needs to be from TERENA (so _probably_ others or TERENA3 does not work)
+  - This should be configurable. PRs are welcome.
 
 Role Variables
 --------------
+
+By default nothing is done by this role because:
+<pre>
+sssd_configure: False
+</pre>
+
+Set it to True to configure sssd.
 
 See:
  - defaults/main.yml and vars/main.yml
@@ -28,7 +37,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: ansible-role-sssd }
+         - { role: ansible-role-sssd, sssd_configure=True }
 
 License
 -------
