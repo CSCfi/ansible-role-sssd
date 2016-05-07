@@ -2,3 +2,7 @@
 
 - include: redhat.yml
   when: ansible_os_family == "RedHat" and sssd_configure == True
+
+- include: gentoo-arch.yml
+  when: (ansible_os_family == "Gentoo" or ansible_os_family == "Archlinux") and sssd_configure == True
+
