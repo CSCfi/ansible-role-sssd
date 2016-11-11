@@ -1,0 +1,10 @@
+---
+- hosts: test.lxc
+  remote_user: root
+  become: True
+  roles:
+    - ansible-role-sssd
+  vars:
+    - sssd_configure: False
+
+# vim:ft=ansible:

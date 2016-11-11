@@ -5,6 +5,9 @@ Configures a Linux server to use sssd and LDAP for system authentication.
 
 Tested on EL6 and EL7
 
+copy templates/sssd-example.conf.j2 to templates/sssd.conf.j2 and modify it
+ - sssd.conf.j2 is ignored from git
+
 Requirements
 ------------
 

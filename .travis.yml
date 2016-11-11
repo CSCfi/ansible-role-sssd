@@ -1,0 +1,80 @@
+language: python
+python: "2.7"
+sudo: required
+dist: trusty
+
+matrix:
+  fast_finish: true
+
+addons:
+  apt:
+    sources:
+    - sourceline: 'ppa:ubuntu-lxc/stable'
+    packages:
+    - python-pip
+    - lxc
+    - lxc-templates
+    - yum
+    - expect-dev
+
+cache:
+  directories:
+    - $HOME/lxc/
+  pip: true
+
+before_cache:
+  - mkdir $HOME/lxc
+  - sudo tar cf $HOME/lxc/cache.tar /var/cache/lxc/
+  - sudo chown $USER. $HOME/lxc/cache.tar
+
+env:
+  - LXC_NAME=test-ubuntu1604 LXC_DISTRO=ubuntu LXC_RELEASE=xenial
+  - LXC_NAME=test-centos7 LXC_DISTRO=centos LXC_RELEASE=7
+  - LXC_NAME=test-centos6 LXC_DISTRO=centos LXC_RELEASE=6
+  - LXC_NAME=test-ubuntu1404 LXC_DISTRO=ubuntu LXC_RELEASE=trusty
+#  - LXC_NAME=test-ubuntu1504 LXC_DISTRO=ubuntu LXC_RELEASE=vivid
+#  - LXC_NAME=test-ubuntu1410 LXC_DISTRO=ubuntu LXC_RELEASE=utopic
+
+install:
+  # Install ansible
+  - pip install ansible
+
+  # Check ansible version
+  - ansible --version
+
+  # Create ansible.cfg with correct roles_path
+  - printf '[defaults]\nroles_path=../\nhost_key_checking=False' >ansible.cfg
+
+  # Extract LXC image cache
+  - sudo tar xf $HOME/lxc/cache.tar -C / || echo "Didn't extract cache."
+
+  # Create and configure LXC container to test against
+  - export LXC_ROOTFS=/var/lib/lxc/$LXC_NAME/rootfs
+  - '[ "x${LXC_DISTRO}" == "xdebian" ] && sudo LANG= LC_ALL= LC_CTYPE= lxc-create -n $LXC_NAME -t debian -- -r $LXC_RELEASE --mirror http://mirrors.us.kernel.org/debian --packages python || true'
+  - '[ "x${LXC_DISTRO}" == "xcentos" ] && sudo root_expire_password=no lxc-create -n $LXC_NAME -t centos -- -R $LXC_RELEASE || true'
+  - '[ "x${LXC_DISTRO}" == "xubuntu" ] && sudo lxc-create -n $LXC_NAME -t ubuntu -- -r $LXC_RELEASE --mirror http://mirrors.us.kernel.org/ubuntu --packages python || true'
+  - 'sudo lxc-start -n $LXC_NAME && until (sudo lxc-info -n $LXC_NAME | grep -q ^IP:); do printf . && sleep 1; done && sleep 2'
+  - '[ "x${LXC_DISTRO}" == "xcentos" ] && sudo lxc-attach -n $LXC_NAME -- yum install -y epel-release || true'
+  - sudo /bin/bash -c "printf '\n$(sudo lxc-info -Hin $LXC_NAME) test.lxc' >> /etc/hosts"
+  - ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ''
+  - sudo mkdir -vm 0700 $LXC_ROOTFS/root/.ssh/
+  - sudo cp -v ~/.ssh/id_rsa.pub $LXC_ROOTFS/root/.ssh/authorized_keys
+
+script:
+  # Basic role syntax check
+  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+
+  # Perform a test run with the playbook
+  - travis_wait ansible-playbook tests/test.yml -i tests/inventory
+
+  # Perform a another test run with the playbook to check for idempotency
+  - 'unbuffer ansible-playbook tests/test.yml -i tests/inventory >/tmp/idempotency.log 2>&1'
+  - >
+    tail /tmp/idempotency.log | grep -qP 'changed=0.*failed=0'
+    && (echo "Idempotence: PASS"; exit 0)
+    || (echo "Idempotence: FAIL"; cat /tmp/idempotency.log; exit 1)
+
+notifications:
+  email: false
+  flowdock:
+    secure: "lxqZTTUCUYy19JzwXnH/kRcndYwNasUYpa0AK0vcRqTRSoULRzwE2jcJUk2YBz0qTBcTgAkinj1VQbImdrl68NTPDTmOZM4+hPZ8RQNTGR7VJwy4Ynjl/RtvxmwvoW/kSZJI3twDvPpAl2yEKfiPwSE4kYNFs84w43WieNhX3qO0LN9EdFykV6M0xeZgGc71v6oGof3n9HhBMfMUYU6YZJKvirHJNwAxHsWiFSq+dfDA5hqDyilwuQM0toNgjsFi6F7b40vOVJPGJKdSNekrFgp2Gm/Fzd83sO/Sp1ord9v73UflshejKuK2/iMRddPW5JDl05FNrJ7x6xcCfK9sxOj5KDELotagHCDdCTqX4USelBpI7DeO9yV8NAIxyL2KAFi5b3uwvF5reitGhRfdeqA0B9eK+k6vdRQ/xKryYc48hVX46wraL2ibZv2gbic7vpYdxiWFUirKB9NBoQu7JHkTT/LT3LjbC9/uL9c4qRyakAnQwhgi4/sEk7f9euvtZA6MJfZpCzfiYVt3rGe6H9HqcCflnxW5F1ZjLBSkHk02rNn6hcfFxGHSS5x1362F9JCwVkAWgJ43JvQLRxobW4htbx56+niX0zS+vs2kK5K3NxUCJzInUb4UV5/9lwcCBZQJL0fD4u2Gy8/TC7MrhhOVxkSSPmjjoonaRPY497c="
