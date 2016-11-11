@@ -6,5 +6,6 @@
     - ansible-role-sssd
   vars:
     - sssd_configure: True
+    - ldap_password: "changeme"
 
 # vim:ft=ansible:
