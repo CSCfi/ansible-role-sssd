@@ -58,7 +58,8 @@ install:
   - '[ "x${LXC_DISTRO}" == "xgentoo" ] && sudo lxc-create -n $LXC_NAME -t gentoo -- || true'
   - '[ "x${LXC_DISTRO}" == "xarchlinux" ] && sudo lxc-create -n $LXC_NAME -t archlinux -- || true'
   - 'sudo lxc-start -n $LXC_NAME && until (sudo lxc-info -n $LXC_NAME | grep -q ^IP:); do printf . && sleep 1; done && sleep 2'
-  - '[ "x${LXC_DISTRO}" == "xgentoo" ] && sudo PYTHON_CFLAGS= lxc-attach -n $LXC_NAME -- emerge --autounmask-write gentoolkit || true'
+  - '[ "x${LXC_DISTRO}" == "xgentoo" ] && sudo PYTHON_CFLAGS= lxc-attach -n $LXC_NAME -- emerge gentoolkit || true'
+  - '[ "x${LXC_DISTRO}" == "xgentoo" ] && sudo PYTHON_CFLAGS= lxc-attach -n $LXC_NAME -- emerge --autounmask-write sssd || true'
   - '[ "x${LXC_DISTRO}" == "xgentoo" ] && sudo PYTHON_CFLAGS= lxc-attach -n $LXC_NAME -- etc-update --automode 5 || true'
   - '[ "x${LXC_DISTRO}" == "xcentos" ] && sudo lxc-attach -n $LXC_NAME -- yum install -y epel-release || true'
   - sudo /bin/bash -c "printf '\n$(sudo lxc-info -Hin $LXC_NAME) test.lxc' >> /etc/hosts"
