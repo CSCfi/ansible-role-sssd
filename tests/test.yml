@@ -5,6 +5,6 @@
   roles:
     - ansible-role-sssd
   vars:
-    - sssd_configure: False
+    - sssd_configure: True
 
 # vim:ft=ansible:
