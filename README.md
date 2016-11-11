@@ -3,7 +3,10 @@ ansible-role-sssd
 
 Configures a Linux server to use sssd and LDAP for system authentication.
 
-Tested on EL6 and EL7
+Tested on EL6, EL7, Gentoo and Arch
+
+ - CI testing of EL6/EL7. 
+ - syntax-checking testing also being done on Ubuntu but no configuration done for that yet.
 
 copy templates/sssd-example.conf.j2 to templates/sssd.conf.j2 and modify it
  - sssd.conf.j2 is ignored from git
@@ -27,8 +30,10 @@ Set it to True to configure sssd.
 See:
  - defaults/main.yml and vars/main.yml
  - templates/sssd-example.conf.j2
- - ldap\_password - this variable needs to have the password of the bind-account.
 
+<pre>
+ldap_password: "ldap_bind_password"
+</pre>
 Dependencies
 ------------
 

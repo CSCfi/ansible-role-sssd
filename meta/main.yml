@@ -27,6 +27,9 @@ galaxy_info:
   #  - 5
     - 6
     - 7
+  - name: ArchLinux
+    versions:
+    - all
   #- name: GenericUNIX
   #  versions:
   #  - all
