@@ -1,0 +1,21 @@
+---
+- name: install software - Gentoo
+  portage: name="sssd" state=present
+  when: ansible_os_family == "Gentoo"
+
+- name: install software - Archlinux
+  pacman: name="sssd" state=present
+  when: ansible_os_family == "Archlinux"
+
+- name: template /etc/pam.d/system-auth
+  template: src=system-auth.gentoo.j2 dest=/etc/pam.d/system-auth backup=yes
+
+- name: template /etc/nsswitch.conf
+  template: src=nsswitch.conf.gentoo.j2 dest=/etc/nsswitch.conf backup=yes
+
+- name: template sssd.conf
+  template: src=sssd.conf.gentoo.j2 dest=/etc/sssd/sssd.conf owner=root group=root mode=0600 backup=yes
+  notify: restart sssd
+
+- name: start sssd on boot
+  service: name=sssd state=started enabled=yes

@@ -1,0 +1,30 @@
+[sssd]
+config_file_version = 2
+services = nss, pam, sudo
+domains = LDAP
+
+[domain/LDAP]
+id_provider = ldap
+auth_provider = ldap
+ldap_search_base = {{ ldap_search_base }}
+ldap_uri = {{ ldap_uri }}
+ldap_tls_reqcert = never
+
+access_provider = ldap
+ldap_access_filter = {{ ldap_access_filter }}
+
+cache_credentials = true
+
+[nss]
+filter_users = root,named,avahi,haldaemon,dbus,radiusd,news,nscd,slurm,munge
+
+[pam]
+
+[sudo]
+
+[autofs]
+
+[ssh]
+
+[pac]
+
