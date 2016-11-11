@@ -55,7 +55,7 @@ install:
   - '[ "x${LXC_DISTRO}" == "xdebian" ] && sudo LANG= LC_ALL= LC_CTYPE= lxc-create -n $LXC_NAME -t debian -- -r $LXC_RELEASE --mirror http://mirrors.us.kernel.org/debian --packages python || true'
   - '[ "x${LXC_DISTRO}" == "xcentos" ] && sudo root_expire_password=no lxc-create -n $LXC_NAME -t centos -- -R $LXC_RELEASE || true'
   - '[ "x${LXC_DISTRO}" == "xubuntu" ] && sudo lxc-create -n $LXC_NAME -t ubuntu -- -r $LXC_RELEASE --mirror http://mirrors.us.kernel.org/ubuntu --packages python || true'
-  - '[ "x${LXC_DISTRO}" == "xgentoo" ] && sudo lxc-create -n $LXC_NAME -t gentoo -- || true'
+  - '[ "x${LXC_DISTRO}" == "xgentoo" ] && sudo PYTHON_CFLAGS= lxc-create -n $LXC_NAME -t gentoo -- || true'
   - '[ "x${LXC_DISTRO}" == "xarchlinux" ] && sudo lxc-create -n $LXC_NAME -t archlinux -- || true'
   - 'sudo lxc-start -n $LXC_NAME && until (sudo lxc-info -n $LXC_NAME | grep -q ^IP:); do printf . && sleep 1; done && sleep 2'
   - '[ "x${LXC_DISTRO}" == "xgentoo" ] && sudo lxc-attach -n $LXC_NAME -- emerge gentoolkit || true'
