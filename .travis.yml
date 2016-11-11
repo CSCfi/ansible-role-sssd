@@ -32,6 +32,8 @@ env:
   - LXC_NAME=test-centos7 LXC_DISTRO=centos LXC_RELEASE=7
   - LXC_NAME=test-centos6 LXC_DISTRO=centos LXC_RELEASE=6
   - LXC_NAME=test-ubuntu1404 LXC_DISTRO=ubuntu LXC_RELEASE=trusty
+  - LXC_NAME=test-gentoo LXC_DISTRO=gentoo
+  - LXC_NAME=test-archlinux LXC_DISTRO=archlinux
 #  - LXC_NAME=test-ubuntu1504 LXC_DISTRO=ubuntu LXC_RELEASE=vivid
 #  - LXC_NAME=test-ubuntu1410 LXC_DISTRO=ubuntu LXC_RELEASE=utopic
 
@@ -53,6 +55,8 @@ install:
   - '[ "x${LXC_DISTRO}" == "xdebian" ] && sudo LANG= LC_ALL= LC_CTYPE= lxc-create -n $LXC_NAME -t debian -- -r $LXC_RELEASE --mirror http://mirrors.us.kernel.org/debian --packages python || true'
   - '[ "x${LXC_DISTRO}" == "xcentos" ] && sudo root_expire_password=no lxc-create -n $LXC_NAME -t centos -- -R $LXC_RELEASE || true'
   - '[ "x${LXC_DISTRO}" == "xubuntu" ] && sudo lxc-create -n $LXC_NAME -t ubuntu -- -r $LXC_RELEASE --mirror http://mirrors.us.kernel.org/ubuntu --packages python || true'
+  - '[ "x${LXC_DISTRO}" == "xgentoo" ] && sudo lxc-create -n $LXC_NAME -t gentoo -- || true'
+  - '[ "x${LXC_DISTRO}" == "xarchlinux" ] && sudo lxc-create -n $LXC_NAME -t archlinux -- || true'
   - 'sudo lxc-start -n $LXC_NAME && until (sudo lxc-info -n $LXC_NAME | grep -q ^IP:); do printf . && sleep 1; done && sleep 2'
   - '[ "x${LXC_DISTRO}" == "xcentos" ] && sudo lxc-attach -n $LXC_NAME -- yum install -y epel-release || true'
   - sudo /bin/bash -c "printf '\n$(sudo lxc-info -Hin $LXC_NAME) test.lxc' >> /etc/hosts"
