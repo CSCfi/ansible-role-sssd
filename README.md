@@ -8,7 +8,6 @@ Configures a Linux server to use sssd and LDAP for system authentication.
 Tested on EL6, EL7, Gentoo and Arch
 
  - CI testing of EL6/EL7. 
- - syntax-checking testing also being done on Ubuntu but no configuration done for that yet.
 
 copy templates/sssd-example.conf.j2 to templates/sssd.conf.j2 and modify it
  - sssd.conf.j2 is ignored from git
