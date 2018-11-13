@@ -1,5 +1,8 @@
 ---
 
+- include: ubuntu.yml
+  when: ansible_os_family == "Debian" and sssd_configure == True
+
 - include: redhat.yml
   when: ansible_os_family == "RedHat" and sssd_configure == True
 
