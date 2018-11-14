@@ -59,7 +59,7 @@
   file: src=/etc/pki/tls/certs/TERENA-SSL-CA.crt dest={{ terenapath }} state=link
   when:
     - terenapath is defined
-    - terena_cert is defined
+    - terena_cert.stat is defined
     - terena_cert.stat.exists
     - terenahash.stdout is defined
     - ldap_terena
