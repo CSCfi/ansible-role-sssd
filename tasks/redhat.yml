@@ -41,6 +41,7 @@
   register: terenahash
   failed_when: (terenahash.rc != 0) and (terenahash.rc != 1)
   changed_when: terenahash.rc == 1
+  check_mode: no
   when: ldap_terena
 
 - name: calculate Terena path
@@ -51,11 +52,17 @@
 - name: check that terena cert exists
   stat: path=/etc/pki/tls/certs/TERENA-SSL-CA.crt
   register: terena_cert
+  check_mode: no
   when: ldap_terena
 
 - name: link the Terena certificate
   file: src=/etc/pki/tls/certs/TERENA-SSL-CA.crt dest={{ terenapath }} state=link
-  when: terenapath is defined and terena_cert.stat.exists and terenahash.stdout is defined and ldap_terena
+  when:
+    - terenapath is defined
+    - terena_cert is defined
+    - terena_cert.stat.exists
+    - terenahash.stdout is defined
+    - ldap_terena
 
 - name: template sssd.conf
   template: src=sssd-example.conf.j2 dest=/etc/sssd/sssd.conf owner=root group=root mode=0600 backup=yes
