@@ -1,12 +1,6 @@
 ---
 - name: install software groups
-  yum: name="{{item}}" state=present
-  with_items:
-     - "sssd"
-     - "sssd-client"
-     - "sssd-proxy"
-     - "sssd-ipa"
-     - "authconfig"
+  yum: name="{{sssd_redhat_packages}}" state=present
 
 - name: template /etc/pam.d/system-auth - EL7
   template: src=system-auth.centos7.j2 dest=/etc/pam.d/system-auth backup=yes
