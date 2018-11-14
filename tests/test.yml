@@ -7,5 +7,6 @@
   vars:
     - sssd_configure: True
     - ldap_password: "changeme"
+    - ldap_terena: True
 
 # vim:ft=ansible:
