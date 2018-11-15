@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/CSC-IT-Center-for-Science/ansible-role-sssd.svg?branch=master)](https://travis-ci.org/CSC-IT-Center-for-Science/ansible-role-sssd)
+[![Build Status](https://travis-ci.org/CSCfi/ansible-role-sssd.svg?branch=master)](https://travis-ci.org/CSCfi/ansible-role-sssd)
 
 ansible-role-sssd
 =========
