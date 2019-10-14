@@ -14,7 +14,7 @@
       package:
         name: sssd-tools
     - name: run sssctl domain-list
-      command: "sssctl domain-list"
+      command: "/usr/sbin/sssctl domain-list"
       register: reg_sssctl_dl
       changed_when: False
     - name: print 
