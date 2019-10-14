@@ -9,5 +9,15 @@
     - ldap_password: "changeme"
     - ldap_terena: True
     - ldap_access_filter: "(|(host=mysweethost.example.org)(host=ALL))"
+  post_tasks:
+    - name: install sss-tools
+      package:
+        name: sssd-tools
+    - name: run sssctl domain-list
+      command: "sssctl domain-list"
+      regster: reg_sssctl_dl
+    - name: print 
+      debug: 
+        var: reg_sssctl_dl
 
 # vim:ft=ansible:
