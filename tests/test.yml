@@ -15,7 +15,7 @@
         name: sssd-tools
     - name: run sssctl domain-list
       command: "sssctl domain-list"
-      regster: reg_sssctl_dl
+      register: reg_sssctl_dl
     - name: print 
       debug: 
         var: reg_sssctl_dl
