@@ -16,6 +16,7 @@
     - name: run sssctl domain-list
       command: "sssctl domain-list"
       register: reg_sssctl_dl
+      changed_when: False
     - name: print 
       debug: 
         var: reg_sssctl_dl
