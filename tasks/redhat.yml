@@ -1,6 +1,8 @@
 ---
 - name: install software groups
-  yum: name="{{sssd_redhat_packages}}" state=present
+  yum:
+    name: "{{ sssd_redhat_packages }}"
+    state: present
 
 - name: template /etc/pam.d/system-auth - EL7
   template: src=system-auth.centos7.j2 dest=/etc/pam.d/system-auth backup=yes
@@ -40,7 +42,7 @@
 
 - name: calculate Terena path
   set_fact:
-    terenapath: "/etc/openldap/certs/{{terenahash.stdout}}.0"
+    terenapath: "/etc/openldap/certs/{{ terenahash.stdout }}.0"
   when: terenahash.stdout is defined and ldap_terena
 
 - name: check that terena cert exists

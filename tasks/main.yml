@@ -1,11 +1,11 @@
 ---
 
 - include: ubuntu.yml
-  when: ansible_os_family == "Debian" and sssd_configure == True
+  when: ansible_os_family == "Debian" and sssd_configure
 
 - include: redhat.yml
-  when: ansible_os_family == "RedHat" and sssd_configure == True
+  when: ansible_os_family == "RedHat" and sssd_configure
 
 - include: gentoo-arch.yml
-  when: (ansible_os_family == "Gentoo" or ansible_os_family == "Archlinux") and sssd_configure == True
+  when: (ansible_os_family == "Gentoo" or ansible_os_family == "Archlinux") and sssd_configure
 
